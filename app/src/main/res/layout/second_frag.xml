@@ -39,7 +39,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:srcCompat="@drawable/ic_android_black_24dp"
-                app:layout_constraintDimensionRatio="1:1"
+                android:background="#fff"
+                app:layout_constraintDimensionRatio="16:9"
         />
 
 
