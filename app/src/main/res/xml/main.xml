@@ -9,9 +9,6 @@
             motion:duration="200"
             motion:interpolator="linear"/>
 
-    <OnClick
-            motion:target="@+id/image"
-    />
 
     <ConstraintSet android:id="@+id/start">
 
