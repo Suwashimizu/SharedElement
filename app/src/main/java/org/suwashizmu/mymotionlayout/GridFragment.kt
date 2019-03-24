@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.app.SharedElementCallback
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.grid_frag.*
 import kotlinx.android.synthetic.main.item_image.view.*
@@ -69,7 +71,26 @@ class GridFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.grid_frag, container, false)
+        return inflater.inflate(R.layout.grid_frag, container, false).apply {
+
+            //フラグメントのトランザクションが発生して Fragment が終了するときと、Fragment がバックスタックからポップされて（「戻る」のナビゲーション）再度開始されるときに呼び出されることに注意してください
+            setExitSharedElementCallback(object : SharedElementCallback() {
+                override fun onMapSharedElements(
+                    names: MutableList<String>?,
+                    sharedElements: MutableMap<String, View>?
+                ) {
+                    val pos = items.indexOfFirst { it.uuid == names!![0] }
+                    val viewHolder = list.findViewHolderForAdapterPosition(pos) as? ViewHolder
+                    if (viewHolder != null) {
+                        sharedElements?.put(names!![0], viewHolder.imageView)
+                    }
+                }
+            })
+
+            exitTransition = Fade()
+
+            postponeEnterTransition()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,9 +99,11 @@ class GridFragment : Fragment() {
         list.adapter = ItemAdapter(
             items,
             ::moveToSecond
-        )
-        list.layoutManager = GridLayoutManager(requireActivity(), 2)
+        ) {
+            startPostponedEnterTransition()
+        }
 
+        list.layoutManager = GridLayoutManager(requireActivity(), 2)
     }
 
     private fun moveToSecond(item: ImageItem, imageView: ImageView) {
@@ -90,13 +113,14 @@ class GridFragment : Fragment() {
                 sharedElementEnterTransition = DetailsTransition()
                 sharedElementReturnTransition = DetailsTransition()
             }
-            exitTransition = Fade()
 
             val transitionName = ViewCompat.getTransitionName(imageView)
             if (transitionName != null) {
 
                 requireFragmentManager()
                     .beginTransaction()
+                    //setAllowOptimization before 26.1.0
+                    .setReorderingAllowed(true)
                     .addSharedElement(imageView, transitionName)
                     .replace(R.id.container, secondFragment)
                     .addToBackStack(null)
@@ -119,13 +143,15 @@ class GridFragment : Fragment() {
 
     private class ItemAdapter(
         private val items: List<ImageItem>,
-        private val clickListener: (item: ImageItem, imageView: ImageView) -> Unit
+        private val clickListener: (item: ImageItem, imageView: ImageView) -> Unit,
+        private val onLoadCompleted: () -> Unit
     ) : RecyclerView.Adapter<ViewHolder>() {
 
 
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
             return ViewHolder(
-                LayoutInflater.from(p0.context).inflate(R.layout.item_image, p0, false)
+                LayoutInflater.from(p0.context).inflate(R.layout.item_image, p0, false),
+                onLoadCompleted
             )
         }
 
@@ -141,14 +167,25 @@ class GridFragment : Fragment() {
         override fun getItemCount(): Int = items.size
     }
 
-    private class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+    private class ViewHolder(
+        private val view: View,
+        private val onLoadCompleted: () -> Unit
+    ) : RecyclerView.ViewHolder(view) {
 
         val imageView = view.image
 
         fun onBind(item: ImageItem) {
             Picasso.get()
                 .load(item.url)
-                .into(view.image)
+                .into(view.image, object : Callback {
+                    override fun onSuccess() {
+                        onLoadCompleted()
+                    }
+
+                    override fun onError(e: Exception?) {
+                        onLoadCompleted()
+                    }
+                })
         }
     }
 

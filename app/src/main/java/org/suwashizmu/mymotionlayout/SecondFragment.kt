@@ -64,11 +64,11 @@ class SecondFragment : Fragment(), MotionLayout.TransitionListener {
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(image, object : Callback {
                     override fun onSuccess() {
-//                        startPostponedEnterTransition()
+                        startPostponedEnterTransition()
                     }
 
                     override fun onError(e: Exception?) {
-//                        startPostponedEnterTransition()
+                        startPostponedEnterTransition()
                     }
                 })
         }
