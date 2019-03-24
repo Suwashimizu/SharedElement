@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.choise_act.*
 
 class ChoiceActivity : AppCompatActivity() {
@@ -28,6 +29,7 @@ class ChoiceActivity : AppCompatActivity() {
         list.setOnItemClickListener { _, _, position, _ ->
             startActivity(Intent(this@ChoiceActivity, items[position].classs))
         }
+        Picasso.get().setIndicatorsEnabled(true)
     }
 
     private class ListAdapter(context: Context, items: List<Item>) :
