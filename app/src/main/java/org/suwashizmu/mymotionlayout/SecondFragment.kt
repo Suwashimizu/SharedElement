@@ -10,8 +10,6 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import com.squareup.picasso.Callback
-import com.squareup.picasso.MemoryPolicy
-import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.second_frag.*
 
@@ -60,8 +58,8 @@ class SecondFragment : Fragment(), MotionLayout.TransitionListener {
             Picasso.get()
                 .load(imageUrl)
                 .noFade()
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                .networkPolicy(NetworkPolicy.NO_CACHE)
+//                .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(image, object : Callback {
                     override fun onSuccess() {
                         startPostponedEnterTransition()
