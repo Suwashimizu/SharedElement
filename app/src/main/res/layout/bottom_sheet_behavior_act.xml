@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout android:id="@+id/container"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent">
+        <TextView
+                android:text="MainContents"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/openButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Open"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="64dp"
+        />
+    </FrameLayout>
+
+    <LinearLayout
+            android:id="@+id/bottomSheet"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            app:layout_behavior="@string/bottom_sheet_behavior"
+            android:background="@android:color/white"
+            app:behavior_hideable="true"
+            tools:visibility="invisible">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_gravity="center_horizontal" android:text="1"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_gravity="center_horizontal" android:text="2"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_gravity="center_horizontal" android:text="3"/>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

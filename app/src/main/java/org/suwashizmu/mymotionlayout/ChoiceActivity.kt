@@ -15,7 +15,8 @@ class ChoiceActivity : AppCompatActivity() {
 
     private val items = listOf(
         Item("MotionLayout", MainActivity::class.java),
-        Item("recyclerView", GridActivity::class.java)
+        Item("recyclerView", GridActivity::class.java),
+        Item("BottomSheet", BottomSheetBehaviorActivity::class.java)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

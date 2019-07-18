@@ -22,6 +22,8 @@
         <activity android:name=".GridActivity"/>
 
         <activity android:name=".MainActivity"/>
+
+        <activity android:name=".BottomSheetBehaviorActivity"/>
     </application>
 
 </manifest>
